@@ -1,0 +1,61 @@
+service: crypto-chatbot
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: dev
+  region: us-east-1
+
+functions:
+  telegram_handler:
+    handler: handler.telegram_handler
+    events:
+      - http:
+          path: telegram
+          method: post
+          cors: true
+
+  whatsapp_handler:
+    handler: handler.whatsapp_handler
+    events:
+      - http:
+          path: whatsapp
+          method: post
+          cors: true
+
+# Set environment variables for the bot tokens
+custom:
+  telegram_bot_token: 6264606571:AAEJIapUYg_0-OY1JJ50xkJMiCk75BlhchQ
+  whatsapp_bot_token: YOUR_WHATSAPP_BOT_TOKEN
+
+# Define IAM role for the Lambda function
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "logs:CreateLogGroup"
+      - "logs:CreateLogStream"
+      - "logs:PutLogEvents"
+    Resource: "arn:aws:logs:*:*:*"
+
+# Set up plugins for the Serverless Framework
+plugins:
+  - serverless-python-requirements
+  - serverless-aws-documentation
+  - serverless-offline
+
+# Set up a CloudWatch Events rule to trigger the HTTP requests for the crypto exchange rates every 6 hours
+# Replace 'YOUR_RULE_NAME' with a name of your choice
+# Replace 'YOUR_TARGET' with the ARN of the Lambda function that will handle the HTTP requests
+# Replace 'YOUR_RATE_EXPRESSION' with the rate expression that defines the frequency of the events
+# See https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html for more information on rate expressions
+resources:
+  Resources:
+    get_all_rates:
+      Type: AWS::Events::Rule
+      Properties:
+        Name: get_all_rates
+        Description: 'Trigger HTTP requests for crypto exchange rates every 6 hours'
+        Targets:
+          - Arn: !GetAtt telegram_handler.Arn
+            Id: YOUR_TARGET_ID
+        ScheduleExpression: Rate(6 hours)
