@@ -8,30 +8,37 @@ To test the Telegram and WhatsApp handlers locally, follow these steps:
    ```sh
    pip install -r requirements.txt
    ```
-2. Start the local serverless server:
+2. Install the required serverless plugins:
+
+   ```sh
+   serverless plugin install -n serverless-python-requirements
+   serverless plugin install -n serverless-offline
+   serverless plugin install -n serverless-dotenv-plugin
+   ```
+3. Start the local serverless server:
 
    ```sh
    sls offline start
    ```
-3. In a separate terminal window, invoke the Telegram handler with a test event:
+4. In a separate terminal window, invoke the Telegram handler with a test event:
 
    ```sh
-   sls invoke local -f telegram_handler --data '{"message": {"chat": {"id": "test_chat_id"}, "text": "btc"}}'
-   ```
-   Replace `test_chat_id` with your own Telegram chat ID, and replace `btc` with the cryptocurrency you want to get rates for.
-   This sends a test message for BTC rates to the Telegram bot running on your local server.
+   serverless invoke local --function telegram --data '{"message": {"text": "/crypto"}}'
 
-4. In another separate terminal window, invoke the WhatsApp handler with a test event:
+   ```
+   Note that when invoking the Telegram function, you must pass a JSON object with a `message` property that contains the `text` of the message that you want to send to the bot. In this example, we are sending the `/crypto` command to trigger the function.
+
+5. In another separate terminal window, invoke the WhatsApp handler with a test event:
 
    ```sh
-   sls invoke local -f whatsapp_handler --data '{"From": "test_chat_id", "Body": "eth"}'
+   serverless invoke local --function whatsapp
+
    ```
-   Replace `test_chat_id` with your own WhatsApp chat ID, and replace `eth` with the cryptocurrency you want to get rates for.
-   This sends a test message for ETH rates to the WhatsApp bot running on your local server.
+   When invoking the WhatsApp function, no input data is needed, since the function simply sends the latest crypto rates to the user via WhatsApp.
 
-5. Check the response messages printed to your console.
+6. Check the response messages printed to your console.
 
-Note that you'll need to update the `YOUR_TELEGRAM_BOT_TOKEN` and `YOUR_WHATSAPP_BOT_TOKEN` values in the `serverless.yml` file with your own bot tokens.
+Note that you'll need to add/update the values in the `.env` file with your own bot tokens.
 
 
 

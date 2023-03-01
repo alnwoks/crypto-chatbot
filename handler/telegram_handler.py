@@ -28,6 +28,7 @@ EXCHANGES = [
 
 # Initialize the Telegram bot using the API token stored in the environment variable
 TELEGRAM_BOT_TOKEN = os.environ.get('YOUR_TELEGRAM_BOT_TOKEN', '')
+logging.debug(f"WhatsApp message SID: {TELEGRAM_BOT_TOKEN}")
 updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
 
 def start(update, context):
