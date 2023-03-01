@@ -1,0 +1,67 @@
+frameworkVersion: 3.28.0
+service: crypto-bot
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: dev
+  region: us-east-1
+
+functions:
+  # telegram_handler:
+  #   handler: handler/telegram_handler.telegram_handler
+  #   events:
+  #     - http:
+  #         path: telegram
+  #         method: post
+  #         cors: true
+
+  # whatsapp_handler:
+  #   handler: handler/whatsapp_handler.whatsapp_handler
+  #   events:
+  #     - http:
+  #         path: whatsapp
+  #         method: post
+  #         cors: true
+
+  telegram:
+    handler: handler/telegram_handler.telegram_handler
+    environment:
+      # YOUR_TELEGRAM_BOT_TOKEN: ${env:YOUR_TELEGRAM_BOT_TOKEN}
+      YOUR_TELEGRAM_BOT_TOKEN: 6264606571:AAEJIapUYg_0-OY1JJ50xkJMiCk75BlhchQ
+      DEBUG: "true"
+    events:
+      - http: ANY /
+      - schedule:
+          rate: rate(6 hours)
+
+  whatsapp:
+    handler: handler/whatsapp_handler.whatsapp_handler.main
+    environment:
+      YOUR_TWILIO_ACCOUNT_SID: ${env:YOUR_TWILIO_ACCOUNT_SID}
+      YOUR_TWILIO_AUTH_TOKEN: ${env:YOUR_TWILIO_AUTH_TOKEN}
+      YOUR_TWILIO_PHONE_NUMBER: ${env:YOUR_TWILIO_PHONE_NUMBER}
+      YOUR_WHATSAPP_NUMBER: ${env:YOUR_WHATSAPP_NUMBER}
+      DEBUG: "true"
+    events:
+      - schedule:
+          rate: rate(6 hours)
+
+# Set environment variables for the bot tokens
+custom:
+  telegram_bot_token: 6264606571:AAEJIapUYg_0-OY1JJ50xkJMiCk75BlhchQ
+  whatsapp_bot_token: YOUR_WHATSAPP_BOT_TOKEN
+
+# Define IAM role for the Lambda function
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "logs:CreateLogGroup"
+      - "logs:CreateLogStream"
+      - "logs:PutLogEvents"
+    Resource: "arn:aws:logs:*:*:*"
+
+# Set up plugins for the Serverless Framework
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
