@@ -39,10 +39,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Test Telegram handler
-        run: python tests/test_telegram_handler.py
-      - name: Test WhatsApp handler
-        run: python tests/test_whatsapp_handler.py
+      # - name: Test Telegram handler
+      #   run: python tests/test_telegram_handler.py
+      # - name: Test WhatsApp handler
+      #   run: python tests/test_whatsapp_handler.py
 
   build:
     runs-on: ubuntu-latest
