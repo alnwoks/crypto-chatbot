@@ -54,10 +54,13 @@ def get_crypto_rates(crypto, exchange):
             }
             logging.debug(f"Response message: {message}")
             return message
-        except BinanceAPIException as e:
-            error_message = e.message
+        # except BinanceAPIException as e:
+        #     error_message = e.message
+        #     logging.debug(f"Error message: {error_message}")
+        #     raise e
+        except Exception as e:
+            error_message = str(e)
             logging.debug(f"Error message: {error_message}")
-            # raise e
     elif exchange == 'Coinbase':
         symbol = CRYPTO_SYMBOLS[crypto] + '-USD'
         try:
