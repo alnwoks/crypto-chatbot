@@ -29,7 +29,7 @@ EXCHANGES = {
 }
 
 # Initialize the Binance client using the API key and secret stored in environment variables
-client = Client(api_key=os.environ.get('BINANCE_API_KEY', ''), api_secret=os.environ.get('BINANCE_API_SECRET', ''))
+client = Client(api_key=os.environ.get('BINANCE_API_KEY', ''), api_secret=os.environ.get('BINANCE_API_SECRET', ''), tld='us', requests_params={'verify': False})
 
 # Initialize the Coinbase client using the API key and secret stored in environment variables
 coinbase_client = CoinbaseClient(api_key=os.environ.get('COINBASE_API_KEY', ''), api_secret=os.environ.get('COINBASE_API_SECRET', ''))
