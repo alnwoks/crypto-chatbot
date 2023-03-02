@@ -45,15 +45,15 @@ def getrate(update, context):
     #     context.bot.send_message(chat_id=update.effective_chat.id, text="Invalid command format. Please use the format /getrate <cryptocurrency symbol> <exchange name>.")
     #     return
 
-    # Check if the cryptocurrency symbol is valid
-    if crypto not in CRYPTO_SYMBOLS:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported cryptocurrency symbol: {crypto}")
-        return
+    # # Check if the cryptocurrency symbol is valid
+    # if crypto not in CRYPTO_SYMBOLS:
+    #     context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported cryptocurrency symbol: {crypto}")
+    #     return
 
-    # Check if the exchange name is valid
-    if exchange not in EXCHANGES:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported exchange name: {exchange}")
-        return
+    # # Check if the exchange name is valid
+    # if exchange not in EXCHANGES:
+    #     context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported exchange name: {exchange}")
+    #     return
 
     # Get the buy and sell rates for the cryptocurrency on the exchange
     crypto_rates = []
