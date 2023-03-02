@@ -19,7 +19,7 @@ provider:
 
 functions:
   telegram:
-    handler: handler/telegram_handler.telegram_handler.main
+    handler: handler.telegram_handler.main
     environment:
       DEBUG: "true"
     events:
@@ -28,7 +28,7 @@ functions:
           rate: rate(6 hours)
 
   whatsapp:
-    handler: handler/whatsapp_handler.whatsapp_handler.main
+    handler: handler.whatsapp_handler.main
     environment:
       DEBUG: "true"
     events:
