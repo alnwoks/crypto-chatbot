@@ -82,3 +82,31 @@ updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
 # Start the Telegram bot
 updater.start_polling()
 updater.idle()
+
+def main():
+    """Main function that sends the latest crypto rates to the user via WhatsApp."""
+    # Get the buy and sell rates for each supported cryptocurrency and exchange
+    crypto_rates = []
+    for crypto in CRYPTO_SYMBOLS.values():
+        for exchange in EXCHANGES:
+            try:
+                response = get_crypto_rates(crypto, exchange)
+                response_message = MESSAGE_TEMPLATE.format(
+                    currency=crypto,
+                    exchange=response['exchange_name'],
+                    buy_rate=response['buy_rate'],
+                    sell_rate=response['sell_rate'],
+                    response_time=response['response_time']
+                )
+                crypto_rates.append(response_message)
+            except Exception as e:
+                error_message = str(e)
+                logging.error(f"Error getting rates from {exchange}: {error_message}")
+
+    # Send the latest crypto rates to the user via WhatsApp
+    if len(crypto_rates) > 0:
+        message = "\n\n".join(crypto_rates)
+        send_message_whatsapp(message)
+
+if __name__ == '__main__':
+    main()
