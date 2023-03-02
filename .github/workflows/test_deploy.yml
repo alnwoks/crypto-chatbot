@@ -57,7 +57,9 @@ jobs:
           serverless plugin install -n serverless-dotenv-plugin
       - name: Test Telegram handler
         run: |
-          serverless invoke local --function telegram --data '{"message": {"text": "/crypto"}}'
+          serverless invoke local --function telegram
+      - name: Test crypto rates handler
+        run: python get_crypto_rates.py BTC Binance
       # - name: Test WhatsApp handler
       #   run: python tests/test_whatsapp_handler.py
 
