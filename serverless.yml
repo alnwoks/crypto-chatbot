@@ -65,7 +65,7 @@ custom:
       - NODE_ENV              # Can not be declared for Google Cloud Functions
 
     # defaults to `true`
-    logging: false
+    # logging: false
 
     # default: plugin does not cause an error if any file or env variable is missing
     # required:
