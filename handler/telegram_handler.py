@@ -75,15 +75,7 @@ def getrate(update, context):
     # Send the response message back to the user via the Telegram bot
     context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
-# Register the command handlers with the Telegram bot
-updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
-
-# Start the Telegram bot
-updater.start_polling()
-updater.idle()
-
-def main():
+def getall(update, context):
     """Main function that sends the latest crypto rates to the user via WhatsApp."""
     # Get the buy and sell rates for each supported cryptocurrency and exchange
     crypto_rates = []
@@ -102,11 +94,19 @@ def main():
             except Exception as e:
                 error_message = str(e)
                 logging.error(f"Error getting rates from {exchange}: {error_message}")
+                return
 
     # Send the latest crypto rates to the user via WhatsApp
     if len(crypto_rates) > 0:
         message = "\n\n".join(crypto_rates)
-        send_message_whatsapp(message)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
-if __name__ == '__main__':
-    main()
+# Register the command handlers with the Telegram bot
+updater.dispatcher.add_handler(CommandHandler('start', start))
+updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
+updater.dispatcher.add_handler(CommandHandler('getall', getall))
+
+# Start the Telegram bot
+updater.start_polling()
+updater.idle()
+
