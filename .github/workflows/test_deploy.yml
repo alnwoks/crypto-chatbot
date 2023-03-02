@@ -11,6 +11,7 @@ env:
   PLAN_NAME: main
   SLS_VERSION: '3.28.0'
   NODE_VERSION: '16.17.0'
+  PYTHON_VERSION: '3.9'
   # SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
   YOUR_TELEGRAM_BOT_TOKEN: ${{ secrets.YOUR_TELEGRAM_BOT_TOKEN }}
   BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
@@ -31,16 +32,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{env.NODE_VERSION}}
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: ${{env.PYTHON_VERSION}}
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      # - name: Test Telegram handler
-      #   run: python tests/test_telegram_handler.py
+      - name: Install Serverless Framework
+        run: npm install -g serverless@${{env.SLS_VERSION}}
+      # - name: Install Python dependencies
+      #   run: pip install -r requirements.txt
+      - name: Install required sls plugins
+        run: |
+          serverless plugin install -n serverless-python-requirements
+          serverless plugin install -n serverless-offline
+          serverless plugin install -n serverless-dotenv-plugin
+      - name: Test Telegram handler
+        run: |
+          serverless invoke local --function telegram --data '{"message": {"text": "/crypto"}}'
       # - name: Test WhatsApp handler
       #   run: python tests/test_whatsapp_handler.py
 
@@ -54,9 +69,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: ${{env.NODE_VERSION}}
       - name: Install Serverless Framework
-        run: npm install -g serverless
+        run: npm install -g serverless@${{env.SLS_VERSION}}
       - name: Install Python dependencies
         run: pip install -r requirements.txt
       - name: Install required sls plugins
