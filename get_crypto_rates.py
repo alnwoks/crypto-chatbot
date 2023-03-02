@@ -19,7 +19,7 @@ CRYPTO_SYMBOLS = {
 
 # Define the exchanges and their API endpoints
 EXCHANGES = {
-    'Binance': {'api': 'binance', 'url': 'https://api.binance.us/api/v3/ticker/bookTicker?symbol={symbol}'},
+    # 'Binance': {'api': 'binance', 'url': 'https://api.binance.us/api/v3/ticker/bookTicker?symbol={symbol}'},
     # 'Coinbase': {'api': 'coinbase', 'url': 'https://api.coinbase.com/v2/prices/{symbol}-USD/spot'},
     'Coinbase': {'api': 'coinbase'},
     'Kraken': {'api': 'kraken', 'url': 'https://api.kraken.com/0/public/Ticker?pair={symbol}USD'},
