@@ -81,7 +81,7 @@ def getrate(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
 
-def main():
+def main(event, context):
     # Register the command handlers with the Telegram bot
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
