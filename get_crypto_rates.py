@@ -4,6 +4,8 @@ import logging
 import requests
 from binance.client import Client
 from binance.exceptions import BinanceAPIException
+from coinbase.wallet.client import Client as CoinbaseClient # Coinbase API client
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -18,7 +20,8 @@ CRYPTO_SYMBOLS = {
 # Define the exchanges and their API endpoints
 EXCHANGES = {
     'Binance': {'api': 'binance', 'url': 'https://api.binance.us/api/v3/ticker/bookTicker?symbol={symbol}'},
-    'Coinbase': {'api': 'coinbase', 'url': 'https://api.coinbase.com/v2/prices/{symbol}-USD/spot'},
+    # 'Coinbase': {'api': 'coinbase', 'url': 'https://api.coinbase.com/v2/prices/{symbol}-USD/spot'},
+    'Coinbase': {'api': 'coinbase'},
     'Kraken': {'api': 'kraken', 'url': 'https://api.kraken.com/0/public/Ticker?pair={symbol}USD'},
     'Huobi': {'api': 'huobi', 'url': 'https://api.huobi.pro/market/detail/merged?symbol={symbol}'},
     'Bitfinex': {'api': 'bitfinex', 'url': 'https://api-pub.bitfinex.com/v2/ticker/{symbol}'},
@@ -27,6 +30,10 @@ EXCHANGES = {
 
 # Initialize the Binance client using the API key and secret stored in environment variables
 client = Client(api_key=os.environ.get('BINANCE_API_KEY', ''), api_secret=os.environ.get('BINANCE_API_SECRET', ''))
+
+# Initialize the Coinbase client using the API key and secret stored in environment variables
+coinbase_client = CoinbaseClient(api_key=os.environ.get('COINBASE_API_KEY', ''), api_secret=os.environ.get('COINBASE_API_SECRET', ''))
+
 
 def get_crypto_rates(crypto, exchange):
     start_time = time.time()
@@ -54,11 +61,9 @@ def get_crypto_rates(crypto, exchange):
     elif exchange == 'Coinbase':
         symbol = CRYPTO_SYMBOLS[crypto] + '-USD'
         try:
-            response = requests.get(EXCHANGES[exchange]['url'].format(symbol=symbol))
+            buy_rate = coinbase_client.get_buy_price(currency_pair=symbol)['amount']
+            sell_rate = coinbase_client.get_sell_price(currency_pair=symbol)['amount']
             response_time = time.time() - start_time
-            data = response.json()
-            buy_rate = data['data']['amount']
-            sell_rate = data['data']['amount']
             message = {
                 'currency': crypto.upper(),
                 'exchange_name': exchange,
