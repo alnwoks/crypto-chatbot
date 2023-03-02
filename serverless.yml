@@ -1,0 +1,80 @@
+frameworkVersion: 3.28.0
+service: crypto-bot
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: dev
+  region: us-east-1
+  environment:
+    YOUR_TELEGRAM_BOT_TOKEN: ${self:custom.dotenv.YOUR_TELEGRAM_BOT_TOKEN, env:YOUR_TELEGRAM_BOT_TOKEN, ''}
+    BINANCE_API_KEY: ${env:BINANCE_API_KEY, self:custom.dotenv.BINANCE_API_KEY, ''}
+    BINANCE_API_SECRET: ${env:BINANCE_API_SECRET, self:custom.dotenv.BINANCE_API_KEY, ''}
+    YOUR_TWILIO_ACCOUNT_SID: ${env:YOUR_TWILIO_ACCOUNT_SID, self:custom.dotenv.BINANCE_API_KEY, ''}
+    YOUR_TWILIO_AUTH_TOKEN: ${env:YOUR_TWILIO_AUTH_TOKEN, self:custom.dotenv.BINANCE_API_KEY, ''}
+    YOUR_TWILIO_PHONE_NUMBER: ${env:YOUR_TWILIO_PHONE_NUMBER, self:custom.dotenv.BINANCE_API_KEY, ''}
+    YOUR_WHATSAPP_NUMBER: ${env:YOUR_WHATSAPP_NUMBER, self:custom.dotenv.BINANCE_API_KEY, ''}
+
+functions:
+  telegram:
+    handler: handler/telegram_handler.telegram_handler
+    environment:
+      DEBUG: "true"
+    events:
+      - http: ANY /
+      - schedule:
+          rate: rate(6 hours)
+
+  whatsapp:
+    handler: handler/whatsapp_handler.whatsapp_handler.main
+    environment:
+      DEBUG: "true"
+    events:
+      - schedule:
+          rate: rate(6 hours)
+
+# Set up plugins for the Serverless Framework
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  dotenv:
+    # default: project root
+    # path: ./
+
+    # if set, ignores `path` option, and only uses the dotenv file at this location
+    # basePath: path/to/my/.env
+
+    # if set, uses provided dotenv parser function instead of built-in function
+    # dotenvParser: dotenv.config.js
+
+    # default: adds all env variables found in your dotenv file(s)
+    # this option must be set to `[]` if `provider.environment` is not a literal string
+    # include:
+    #   - DDB_TABLE
+    #   - S3_BUCKET
+
+    # default: does not exclude any env variables found in your dotenv file(s)
+    # does nothing if `include` is set
+    exclude:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - NODE_ENV              # Can not be declared for Google Cloud Functions
+
+    # defaults to `true`
+    logging: false
+
+    # default: plugin does not cause an error if any file or env variable is missing
+    # required:
+      # default: []
+      # env:
+      #   - API_KEY
+
+      # default: false
+      # file: true
+
+    # default: true
+    # variableExpansion: false
