@@ -38,12 +38,12 @@ def start(update, context):
 def getrate(update, context):
     """Handler function for the /getrate command."""
     # Parse the cryptocurrency and exchange arguments
-    try:
-        crypto = context.args[0].upper()
-        exchange = context.args[1].title()
-    except IndexError:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="Invalid command format. Please use the format /getrate <cryptocurrency symbol> <exchange name>.")
-        return
+    # try:
+    #     crypto = context.args[0].upper()
+    #     exchange = context.args[1].title()
+    # except IndexError:
+    #     context.bot.send_message(chat_id=update.effective_chat.id, text="Invalid command format. Please use the format /getrate <cryptocurrency symbol> <exchange name>.")
+    #     return
 
     # Check if the cryptocurrency symbol is valid
     if crypto not in CRYPTO_SYMBOLS:
