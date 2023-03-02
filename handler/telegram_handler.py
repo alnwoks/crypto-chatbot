@@ -64,20 +64,17 @@ def getrate(update, context):
         return
 
     # Format the response message using the default message template
-    response_message = MESSAGE_TEMPLATE.format(
-        currency=crypto,
-        exchange=response['exchange_name'],
-        buy_rate=response['buy_rate'],
-        sell_rate=response['sell_rate'],
-        response_time=response['response_time']
-    )
+    # response_message = MESSAGE_TEMPLATE.format(
+    #     currency=crypto,
+    #     exchange=response['exchange_name'],
+    #     buy_rate=response['buy_rate'],
+    #     sell_rate=response['sell_rate'],
+    #     response_time=response['response_time']
+    # )
 
-    # Send the response message back to the user via the Telegram bot
-    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+    # # Send the response message back to the user via the Telegram bot
+    # context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
 
-def getall(update, context):
-    """Main function that sends the latest crypto rates to the user via WhatsApp."""
-    # Get the buy and sell rates for each supported cryptocurrency and exchange
     crypto_rates = []
     for crypto in CRYPTO_SYMBOLS.values():
         for exchange in EXCHANGES:
@@ -101,12 +98,16 @@ def getall(update, context):
         message = "\n\n".join(crypto_rates)
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
 
-# Register the command handlers with the Telegram bot
-updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
-updater.dispatcher.add_handler(CommandHandler('getall', getall))
 
-# Start the Telegram bot
-updater.start_polling()
-updater.idle()
 
+def main():
+    # Register the command handlers with the Telegram bot
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
+
+    # Start the Telegram bot
+    updater.start_polling()
+    updater.idle()
+    
+if __name__ == '__main__':
+    main()
