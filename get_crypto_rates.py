@@ -50,7 +50,7 @@ def get_crypto_rates(crypto, exchange):
         except BinanceAPIException as e:
             error_message = e.message
             logging.debug(f"Error message: {error_message}")
-            raise e
+            # raise e
     elif exchange == 'Coinbase':
         symbol = CRYPTO_SYMBOLS[crypto] + '-USD'
         try:
@@ -71,7 +71,7 @@ def get_crypto_rates(crypto, exchange):
         except Exception as e:
             error_message = str(e)
             logging.debug(f"Error message: {error_message}")
-            raise e
+            # raise e
     elif exchange == 'Kraken':
         symbol = CRYPTO_SYMBOLS[crypto] + 'USD'
         try:
@@ -92,7 +92,7 @@ def get_crypto_rates(crypto, exchange):
         except Exception as e:
             error_message = str(e)
             logging.debug(f"Error message: {error_message}")
-            raise e
+            # raise e
     elif exchange == 'Huobi':
         symbol = CRYPTO_SYMBOLS[crypto] + 'usdt'
         try:
@@ -113,7 +113,7 @@ def get_crypto_rates(crypto, exchange):
         except Exception as e:
             error_message = str(e)
             logging.debug(f"Error message: {error_message}")
-            raise e
+            # raise e
     elif exchange == 'Bitfinex':
         symbol = CRYPTO_SYMBOLS[crypto] + 'USD'
         try:
@@ -134,7 +134,7 @@ def get_crypto_rates(crypto, exchange):
         except Exception as e:
             error_message = str(e)
             logging.debug(f"Error message: {error_message}")
-            raise e
+            # raise e
     elif exchange == 'Bitstamp':
         symbol = CRYPTO_SYMBOLS[crypto].lower() + 'usd'
         try:
@@ -155,6 +155,6 @@ def get_crypto_rates(crypto, exchange):
         except Exception as e:
             error_message = str(e)
             logging.debug(f"Error message: {error_message}")
-            raise e
+            # raise e
     else:
         raise ValueError(f"Unsupported exchange: {exchange}")
