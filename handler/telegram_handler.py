@@ -28,7 +28,7 @@ EXCHANGES = [
 
 # Initialize the Telegram bot using the API token stored in the environment variable
 TELEGRAM_BOT_TOKEN = os.environ.get('YOUR_TELEGRAM_BOT_TOKEN', '')
-logging.debug(f"TELEGRAM_BOT_TOKEN: {TELEGRAM_BOT_TOKEN}")
+
 updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
 
 def start(update, context):
@@ -97,7 +97,6 @@ def getrate(update, context):
     if len(crypto_rates) > 0:
         message = "\n\n".join(crypto_rates)
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
-
 
 
 def main():
