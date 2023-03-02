@@ -75,7 +75,7 @@ def getrate(update, context):
                 logging.error(f"Error getting rates from {exchange}: {error_message}")
                 return
 
-    # Send the latest crypto rates to the user via WhatsApp
+    # Send the latest crypto rates to the user via Telegram
     if len(crypto_rates) > 0:
         message = "\n\n".join(crypto_rates)
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)

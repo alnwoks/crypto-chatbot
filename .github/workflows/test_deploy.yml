@@ -18,9 +18,12 @@ env:
   BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
   COINBASE_API_KEY: ${{ secrets.COINBASE_API_KEY }}
   COINBASE_API_SECRET: ${{ secrets.COINBASE_API_SECRET }}
-  YOUR_TWILIO_ACCOUNT_SID: ${{ secrets.YOUR_TWILIO_ACCOUNT_SID }}
-  YOUR_TWILIO_AUTH_TOKEN: ${{ secrets.YOUR_TWILIO_AUTH_TOKEN }}
-  YOUR_TWILIO_PHONE_NUMBER: ${{ secrets.YOUR_TWILIO_PHONE_NUMBER }}
+  YOUR_TWILIO_ACCOUNT_SID: ${{ secrets.YOUR_TWILIO_ACCOUNT_SID_TEST }}
+  YOUR_TWILIO_AUTH_TOKEN: ${{ secrets.YOUR_TWILIO_AUTH_TOKEN_TEST }}
+  YOUR_TWILIO_PHONE_NUMBER: ${{ secrets.YOUR_TWILIO_PHONE_NUMBER_TEST }}
+  # YOUR_TWILIO_ACCOUNT_SID: ${{ secrets.YOUR_TWILIO_ACCOUNT_SID }}
+  # YOUR_TWILIO_AUTH_TOKEN: ${{ secrets.YOUR_TWILIO_AUTH_TOKEN }}
+  # YOUR_TWILIO_PHONE_NUMBER: ${{ secrets.YOUR_TWILIO_PHONE_NUMBER }}
   YOUR_WHATSAPP_NUMBER: ${{ secrets.YOUR_WHATSAPP_NUMBER }}
   
 permissions:
@@ -102,8 +105,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: ${{env.NODE_VERSION}}
       - name: Install Serverless Framework
-        run: npm install -g serverless
+        run: npm install -g serverless@${{env.SLS_VERSION}}
       - name: Deploy Serverless
-        run: sls deploy
+        run: SLS_DEBUG=* serverless deploy --verbose --stage staging --region ${{env.AWS_DEFAULT_REGION}} --force
