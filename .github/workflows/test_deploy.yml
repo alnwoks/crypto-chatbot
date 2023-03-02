@@ -10,7 +10,7 @@ env:
   AWS_DEFAULT_REGION: us-east-1
   PLAN_NAME: main
   SLS_VERSION: '3.28.0'
-  NODE_VERSION: '16.17.0'
+  NODE_VERSION: '19.2.0'
   PYTHON_VERSION: '3.9'
   # SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
   YOUR_TELEGRAM_BOT_TOKEN: ${{ secrets.YOUR_TELEGRAM_BOT_TOKEN }}
@@ -31,6 +31,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        lambda: [ whatsapp, telegram ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -53,10 +56,10 @@ jobs:
           serverless plugin install -n serverless-python-requirements
           serverless plugin install -n serverless-offline
           serverless plugin install -n serverless-dotenv-plugin
-      - name: Test WhatsApp handler
-        run: serverless invoke local --function whatsapp
-      - name: Test Telegram handler
-        run: serverless invoke local --function telegram
+      # - name: Test WhatsApp handler
+      #   run: serverless invoke local --function whatsapp
+      - name: Test ${{ matrix.lambda }} handler
+        run: serverless invoke local --function ${{ matrix.lambda }}
       - name: Test crypto rates handler
         run: python get_crypto_rates.py BTC Binance
 

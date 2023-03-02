@@ -56,25 +56,6 @@ def getrate(update, context):
         return
 
     # Get the buy and sell rates for the cryptocurrency on the exchange
-    try:
-        response = get_crypto_rates(crypto, exchange)
-    except Exception as e:
-        error_message = str(e)
-        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error getting rates from {exchange}: {error_message}")
-        return
-
-    # Format the response message using the default message template
-    # response_message = MESSAGE_TEMPLATE.format(
-    #     currency=crypto,
-    #     exchange=response['exchange_name'],
-    #     buy_rate=response['buy_rate'],
-    #     sell_rate=response['sell_rate'],
-    #     response_time=response['response_time']
-    # )
-
-    # # Send the response message back to the user via the Telegram bot
-    # context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
-
     crypto_rates = []
     for crypto in CRYPTO_SYMBOLS.values():
         for exchange in EXCHANGES:
@@ -90,6 +71,7 @@ def getrate(update, context):
                 crypto_rates.append(response_message)
             except Exception as e:
                 error_message = str(e)
+                context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error getting rates from {exchange}: {error_message}")
                 logging.error(f"Error getting rates from {exchange}: {error_message}")
                 return
 
