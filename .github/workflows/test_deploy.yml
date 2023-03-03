@@ -25,6 +25,9 @@ env:
   # YOUR_TWILIO_AUTH_TOKEN: ${{ secrets.YOUR_TWILIO_AUTH_TOKEN }}
   # YOUR_TWILIO_PHONE_NUMBER: ${{ secrets.YOUR_TWILIO_PHONE_NUMBER }}
   YOUR_WHATSAPP_NUMBER: ${{ secrets.YOUR_WHATSAPP_NUMBER }}
+  WA_CLIENT_SECRET: ${{ secrets.WA_CLIENT_SECRET }}
+  WA_CLIENT_ID: ${{ secrets.WA_CLIENT_ID }}
+  # WA_SESSION_FILE: ${{ secrets.WA_SESSION_FILE }}
   
 permissions:
   contents: write 
