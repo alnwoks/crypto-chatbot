@@ -59,10 +59,10 @@ jobs:
           serverless plugin install -n serverless-python-requirements
           serverless plugin install -n serverless-offline
           serverless plugin install -n serverless-dotenv-plugin
+      - name: Test ${{ matrix.lambda }} handler
+        run: serverless invoke local --function ${{ matrix.lambda }}
       # - name: Test Telegram handler
       #   run: serverless invoke local --function telegram
-      # - name: Test ${{ matrix.lambda }} handler
-      #   run: serverless invoke local --function ${{ matrix.lambda }}
       - name: Test crypto rates handler
         run: python get_crypto_rates.py BTC Binance
 
@@ -87,8 +87,8 @@ jobs:
           serverless plugin install -n serverless-python-requirements
           serverless plugin install -n serverless-offline
           serverless plugin install -n serverless-dotenv-plugin
-      - name: Package Serverless
-        run: sls package
+      # - name: Package Serverless
+      #   run: sls package
 
   deploy:
     runs-on: ubuntu-latest
