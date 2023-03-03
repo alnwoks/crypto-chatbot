@@ -38,24 +38,43 @@ def start(update, context):
 def getrate(update, context):
     """Handler function for the /getrate command."""
     # Parse the cryptocurrency and exchange arguments
-    # try:
-    #     crypto = context.args[0].upper()
-    #     exchange = context.args[1].title()
-    # except IndexError:
-    #     context.bot.send_message(chat_id=update.effective_chat.id, text="Invalid command format. Please use the format /getrate <cryptocurrency symbol> <exchange name>.")
-    #     return
+    try:
+        crypto = context.args[0].upper()
+        exchange = context.args[1].title()
+    except IndexError:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Invalid command format. Please use the format /getrate <cryptocurrency symbol> <exchange name>.")
+        return
 
-    # # Check if the cryptocurrency symbol is valid
-    # if crypto not in CRYPTO_SYMBOLS:
-    #     context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported cryptocurrency symbol: {crypto}")
-    #     return
+    # Check if the cryptocurrency symbol is valid
+    if crypto not in CRYPTO_SYMBOLS:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported cryptocurrency symbol: {crypto}")
+        return
 
-    # # Check if the exchange name is valid
-    # if exchange not in EXCHANGES:
-    #     context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported exchange name: {exchange}")
-    #     return
+    # Check if the exchange name is valid
+    if exchange not in EXCHANGES:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Unsupported exchange name: {exchange}")
+        return
 
     # Get the buy and sell rates for the cryptocurrency on the exchange
+    try:
+        response = get_crypto_rates(crypto, exchange)
+        response_message = MESSAGE_TEMPLATE.format(
+            currency=crypto,
+            exchange=response['exchange_name'],
+            buy_rate=response['buy_rate'],
+            sell_rate=response['sell_rate'],
+            response_time=response['response_time']
+        )
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+    except Exception as e:
+        error_message = str(e)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error getting rates from {exchange}: {error_message}")
+        logging.error(f"Error getting rates from {exchange}: {error_message}")
+
+
+def getallrates(update, context):
+    """Handler function for the /getallrates command."""
+    # Get the buy and sell rates for all the supported cryptocurrencies on all the supported exchanges
     crypto_rates = []
     for crypto in CRYPTO_SYMBOLS.values():
         for exchange in EXCHANGES:
@@ -71,20 +90,23 @@ def getrate(update, context):
                 crypto_rates.append(response_message)
             except Exception as e:
                 error_message = str(e)
-                context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error getting rates from {exchange}: {error_message}")
-                logging.error(f"Error getting rates from {exchange}: {error_message}")
-                return
+                logging.error(f"Error getting rates from {exchange} for {crypto}: {error_message}")
 
     # Send the latest crypto rates to the user via Telegram
     if len(crypto_rates) > 0:
         message = "\n\n".join(crypto_rates)
         context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="No crypto rates available at this time.")
+
 
 
 def main(event, context):
     # Register the command handlers with the Telegram bot
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
+    updater.dispatcher.add_handler(CommandHandler('getallrates', getallrates))
+
 
     # Start the Telegram bot
     updater.start_polling()
