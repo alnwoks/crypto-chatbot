@@ -41,7 +41,7 @@ def send_message_whatsapp(message):
     )
     logging.debug(f"WhatsApp message SID: {message.sid}")
 
-def main():
+def main(event, context):
     """Main function that sends the latest crypto rates to the user via WhatsApp."""
     # Get the buy and sell rates for each supported cryptocurrency and exchange
     crypto_rates = []

@@ -28,7 +28,7 @@ EXCHANGES = [
 
 # Initialize the Telegram bot using the API token stored in the environment variable
 TELEGRAM_BOT_TOKEN = os.environ.get('YOUR_TELEGRAM_BOT_TOKEN', '')
-logging.debug(f"TELEGRAM_BOT_TOKEN: {TELEGRAM_BOT_TOKEN}")
+
 updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
 
 def start(update, context):
@@ -58,27 +58,59 @@ def getrate(update, context):
     # Get the buy and sell rates for the cryptocurrency on the exchange
     try:
         response = get_crypto_rates(crypto, exchange)
+        response_message = MESSAGE_TEMPLATE.format(
+            currency=crypto,
+            exchange=response['exchange_name'],
+            buy_rate=response['buy_rate'],
+            sell_rate=response['sell_rate'],
+            response_time=response['response_time']
+        )
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
     except Exception as e:
         error_message = str(e)
         context.bot.send_message(chat_id=update.effective_chat.id, text=f"Error getting rates from {exchange}: {error_message}")
-        return
+        logging.error(f"Error getting rates from {exchange}: {error_message}")
 
-    # Format the response message using the default message template
-    response_message = MESSAGE_TEMPLATE.format(
-        currency=crypto,
-        exchange=response['exchange_name'],
-        buy_rate=response['buy_rate'],
-        sell_rate=response['sell_rate'],
-        response_time=response['response_time']
-    )
 
-    # Send the response message back to the user via the Telegram bot
-    context.bot.send_message(chat_id=update.effective_chat.id, text=response_message)
+def getallrates(update, context):
+    """Handler function for the /getallrates command."""
+    # Get the buy and sell rates for all the supported cryptocurrencies on all the supported exchanges
+    crypto_rates = []
+    for crypto in CRYPTO_SYMBOLS.values():
+        for exchange in EXCHANGES:
+            try:
+                response = get_crypto_rates(crypto, exchange)
+                response_message = MESSAGE_TEMPLATE.format(
+                    currency=crypto,
+                    exchange=response['exchange_name'],
+                    buy_rate=response['buy_rate'],
+                    sell_rate=response['sell_rate'],
+                    response_time=response['response_time']
+                )
+                crypto_rates.append(response_message)
+            except Exception as e:
+                error_message = str(e)
+                logging.error(f"Error getting rates from {exchange} for {crypto}: {error_message}")
 
-# Register the command handlers with the Telegram bot
-updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
+    # Send the latest crypto rates to the user via Telegram
+    if len(crypto_rates) > 0:
+        message = "\n\n".join(crypto_rates)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="No crypto rates available at this time.")
 
-# Start the Telegram bot
-updater.start_polling()
-updater.idle()
+
+
+def main(event, context):
+    # Register the command handlers with the Telegram bot
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('getrate', getrate))
+    updater.dispatcher.add_handler(CommandHandler('getallrates', getallrates))
+
+
+    # Start the Telegram bot
+    updater.start_polling()
+    updater.idle()
+    
+if __name__ == '__main__':
+    main()

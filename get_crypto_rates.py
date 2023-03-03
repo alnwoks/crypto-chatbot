@@ -2,8 +2,11 @@ import os
 import time
 import logging
 import requests
-from binance.client import Client
+import certifi
+from binance.client import Client as BinanceClient # Binance API client
 from binance.exceptions import BinanceAPIException
+from coinbase.wallet.client import Client as CoinbaseClient # Coinbase API client
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -17,8 +20,10 @@ CRYPTO_SYMBOLS = {
 
 # Define the exchanges and their API endpoints
 EXCHANGES = {
-    'Binance': {'api': 'binance', 'url': 'https://api.binance.com/api/v3/ticker/bookTicker?symbol={symbol}'},
-    'Coinbase': {'api': 'coinbase', 'url': 'https://api.coinbase.com/v2/prices/{symbol}-USD/spot'},
+    # 'Binance': {'api': 'binance', 'url': 'https://api.binance.us/api/v3/ticker/bookTicker?symbol={symbol}'},
+    # 'Coinbase': {'api': 'coinbase', 'url': 'https://api.coinbase.com/v2/prices/{symbol}-USD/spot'},
+    'Coinbase': {'api': 'coinbase'},
+    'Binance': {'api': 'binance'},
     'Kraken': {'api': 'kraken', 'url': 'https://api.kraken.com/0/public/Ticker?pair={symbol}USD'},
     'Huobi': {'api': 'huobi', 'url': 'https://api.huobi.pro/market/detail/merged?symbol={symbol}'},
     'Bitfinex': {'api': 'bitfinex', 'url': 'https://api-pub.bitfinex.com/v2/ticker/{symbol}'},
@@ -26,14 +31,18 @@ EXCHANGES = {
 }
 
 # Initialize the Binance client using the API key and secret stored in environment variables
-client = Client(api_key=os.environ.get('BINANCE_API_KEY', ''), api_secret=os.environ.get('BINANCE_API_SECRET', ''))
+binance_client = BinanceClient(api_key=os.environ.get('BINANCE_API_KEY', ''), api_secret=os.environ.get('BINANCE_API_SECRET', ''), tld='us', requests_params={'verify': certifi.where()})
+
+# Initialize the Coinbase client using the API key and secret stored in environment variables
+coinbase_client = CoinbaseClient(api_key=os.environ.get('COINBASE_API_KEY', ''), api_secret=os.environ.get('COINBASE_API_SECRET', ''))
+
 
 def get_crypto_rates(crypto, exchange):
     start_time = time.time()
     if exchange == 'Binance':
         symbol = CRYPTO_SYMBOLS[crypto] + 'USDT'
         try:
-            ticker = client.get_ticker(symbol=symbol)
+            ticker = binance_client.get_ticker(symbol=symbol)
             buy_rate = ticker['bidPrice']
             sell_rate = ticker['askPrice']
             end_time = time.time()
@@ -51,14 +60,15 @@ def get_crypto_rates(crypto, exchange):
             error_message = e.message
             logging.debug(f"Error message: {error_message}")
             raise e
+        # except Exception as e:
+        #     error_message = str(e)
+        #     logging.debug(f"Error message: {error_message}")
     elif exchange == 'Coinbase':
         symbol = CRYPTO_SYMBOLS[crypto] + '-USD'
         try:
-            response = requests.get(EXCHANGES[exchange]['url'].format(symbol=symbol))
+            buy_rate = coinbase_client.get_buy_price(currency_pair=symbol)['amount']
+            sell_rate = coinbase_client.get_sell_price(currency_pair=symbol)['amount']
             response_time = time.time() - start_time
-            data = response.json()
-            buy_rate = data['data']['amount']
-            sell_rate = data['data']['amount']
             message = {
                 'currency': crypto.upper(),
                 'exchange_name': exchange,
