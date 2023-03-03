@@ -34,9 +34,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     lambda: [ whatsapp, telegram ]
+    strategy:
+      matrix:
+        lambda: [ whatsapp, telegram ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -61,8 +61,8 @@ jobs:
           serverless plugin install -n serverless-dotenv-plugin
       - name: Test Telegram handler
         run: serverless invoke local --function telegram
-      # - name: Test ${{ matrix.lambda }} handler
-      #   run: serverless invoke local --function ${{ matrix.lambda }}
+      - name: Test ${{ matrix.lambda }} handler
+        run: serverless invoke local --function ${{ matrix.lambda }}
       - name: Test crypto rates handler
         run: python get_crypto_rates.py BTC Binance
 

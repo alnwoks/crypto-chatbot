@@ -20,10 +20,10 @@ CRYPTO_SYMBOLS = {
 EXCHANGES = [
     'Binance',
     'Coinbase',
-    # 'Kraken',
-    # 'Huobi',
-    # 'Bitfinex',
-    # 'Bitstamp'
+    'Kraken',
+    'Huobi',
+    'Bitfinex',
+    'Bitstamp'
 ]
 
 # Initialize the Telegram bot using the API token stored in the environment variable
