@@ -16,6 +16,9 @@ provider:
     YOUR_TWILIO_AUTH_TOKEN: ${env:YOUR_TWILIO_AUTH_TOKEN, self:custom.dotenv.BINANCE_API_KEY, ''}
     YOUR_TWILIO_PHONE_NUMBER: ${env:YOUR_TWILIO_PHONE_NUMBER, self:custom.dotenv.BINANCE_API_KEY, ''}
     YOUR_WHATSAPP_NUMBER: ${env:YOUR_WHATSAPP_NUMBER, self:custom.dotenv.BINANCE_API_KEY, ''}
+    WA_CLIENT_ID: ${env:WA_CLIENT_ID, self:custom.dotenv.WA_CLIENT_ID, ''}
+    WA_CLIENT_SECRET: ${env:WA_CLIENT_SECRET, self:custom.dotenv.WA_CLIENT_SECRET, ''}
+    WA_SESSION_FILE: ./session.json
 
 functions:
   telegram:
