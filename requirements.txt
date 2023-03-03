@@ -6,4 +6,4 @@ binance-connector-python==0.6.0
 python-binance==1.0.17
 coinbase==2.1.0
 certifi==2021.5.30
-wa-automate-socket-client==1.0.3
+wa-automate-socket-client==1.0.0
