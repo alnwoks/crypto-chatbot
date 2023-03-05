@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        lambda: [ telegram ] # , whatsapp
+        lambda: [ send_crypto_rates ] # , whatsapp
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -54,7 +54,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt -t .
       - name: Install Serverless Framework
         run: npm install -g serverless@${{env.SLS_VERSION}}
       - name: Install required sls plugins
@@ -64,8 +64,8 @@ jobs:
           serverless plugin install -n serverless-dotenv-plugin
       - name: Test ${{ matrix.lambda }} handler
         run: serverless invoke local --function ${{ matrix.lambda }}
-      - name: Test crypto rates handler
-        run: python get_crypto_rates.py BTC Binance
+      # - name: Test crypto rates handler
+      #   run: python get_crypto_rates.py BTC Binance
 
 
   build:
