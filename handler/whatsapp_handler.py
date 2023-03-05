@@ -1,7 +1,7 @@
 import os
 import logging
-# from wa_automate_socket_client.client import WhatsappClient
-from wa_automate_socket_client.client import WhatsappClient
+from wa_automate_socket_client import SocketClient as  WhatsappClient
+# from openwa import WhatsappClient
 from get_crypto_rates import get_crypto_rates
 
 logging.basicConfig(level=logging.DEBUG)
@@ -21,10 +21,10 @@ CRYPTO_SYMBOLS = {
 EXCHANGES = [
     'Binance',
     'Coinbase',
-    # 'Kraken',
-    # 'Huobi',
-    # 'Bitfinex',
-    # 'Bitstamp'
+    'Kraken',
+    'Huobi',
+    'Bitfinex',
+    'Bitstamp'
 ]
 
 # Initialize the WhatsApp client using the session file stored in the environment variable
