@@ -1,12 +1,18 @@
 import os
 import time
 from selenium import webdriver
-from telegram import Bot, ParseMode
+from telegram import Bot
+# from telegram.ext import ParseMode
+# from telegram.ext import Updater, CommandHandler
 
 WHATSAPP_WEB_URL = 'https://web.whatsapp.com/'
+WHATSAPP_USERS = os.environ.get('WHATSAPP_USERS').split(',')
 
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
+# Initialize the Telegram bot using the API token stored in the environment variable
 TELEGRAM_CHAT_IDS = os.environ.get('TELEGRAM_CHAT_IDS').split(',')
+TELEGRAM_BOT_TOKEN = os.environ.get('YOUR_TELEGRAM_BOT_TOKEN', '')
+
+# updater = Updater(token=TELEGRAM_BOT_TOKEN, use_context=True)
 
 def send_whatsapp_message(to_number, message):
     chrome_options = webdriver.ChromeOptions()
@@ -35,9 +41,10 @@ def send_whatsapp_message(to_number, message):
 
     driver.quit()
 
+
 def send_telegram_message(chat_id, message):
     bot = Bot(TELEGRAM_BOT_TOKEN)
-    bot.send_message(chat_id=chat_id, text=message, parse_mode=ParseMode.MARKDOWN_V2)
+    bot.send_message(chat_id=chat_id, text=message)
 
 def send_messages(message):
     for user in WHATSAPP_USERS:
