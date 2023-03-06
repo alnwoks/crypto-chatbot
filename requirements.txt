@@ -3,3 +3,4 @@ coinbase
 python-telegram-bot
 selenium
 certifi
+chromedriver-binary
