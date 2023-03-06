@@ -7,6 +7,7 @@ from telegram import Bot
 
 WHATSAPP_WEB_URL = 'https://web.whatsapp.com/'
 WHATSAPP_USERS = os.environ.get('WHATSAPP_USERS').split(',')
+SKIP_QR_CODE = os.environ.get('SKIP_QR_CODE', 'false').lower() == 'true'
 
 # Initialize the Telegram bot using the API token stored in the environment variable
 TELEGRAM_CHAT_IDS = os.environ.get('TELEGRAM_CHAT_IDS').split(',')
@@ -23,8 +24,9 @@ def send_whatsapp_message(to_number, message):
     driver = webdriver.Chrome(options=chrome_options)
     driver.get(WHATSAPP_WEB_URL)
 
-    input('Press enter after scanning QR code')
-    
+    if not SKIP_QR_CODE:
+        input('Press enter after scanning QR code')
+
     search_box = driver.find_element_by_xpath('//div[contains(@class, "_2_1wd copyable-text selectable-text")]')
     search_box.click()
     search_box.send_keys(to_number)
@@ -40,7 +42,6 @@ def send_whatsapp_message(to_number, message):
     send_button.click()
 
     driver.quit()
-
 
 def send_telegram_message(chat_id, message):
     bot = Bot(TELEGRAM_BOT_TOKEN)

@@ -15,8 +15,9 @@ functions:
       BINANCE_API_SECRET: ${env:BINANCE_API_SECRET, self:custom.dotenv.BINANCE_API_KEY, ''}
       COINBASE_API_KEY: ${env:COINBASE_API_KEY, self:custom.dotenv.COINBASE_API_KEY, ''}
       COINBASE_API_SECRET: ${env:COINBASE_API_SECRET, self:custom.dotenv.COINBASE_API_SECRET, ''}
-      WHATSAPP_USERS: <your_comma_separated_whatsapp_numbers>
-      TELEGRAM_CHAT_IDS: <your_comma_separated_telegram_chat_ids>
+      WHATSAPP_USERS: ${env:WHATSAPP_USERS, self:custom.dotenv.WHATSAPP_USERS, ''}
+      TELEGRAM_CHAT_IDS: ${env:TELEGRAM_CHAT_IDS, self:custom.dotenv.TELEGRAM_CHAT_IDS, ''}
+      SKIP_QR_CODE: true  # Set this variable to "true" to skip QR
 
 plugins:
   - serverless-python-requirements
