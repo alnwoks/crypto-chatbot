@@ -62,10 +62,11 @@ jobs:
           serverless plugin install -n serverless-python-requirements
           serverless plugin install -n serverless-offline
           serverless plugin install -n serverless-dotenv-plugin
-      - name: Test ${{ matrix.lambda }} handler
-        run: serverless invoke local --function ${{ matrix.lambda }}
       - name: debug code
         run: chromedriver --version
+      - name: Test ${{ matrix.lambda }} handler
+        run: serverless invoke local --function ${{ matrix.lambda }}
+
 
 
   build:
