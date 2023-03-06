@@ -29,6 +29,7 @@ def get_crypto_rates():
             logger.info(f'Fetching rate for binance pair: {binance_pair}, coinbase pair: {coinbase_pair}')
             ticker_binance = client_binance.get_symbol_ticker(symbol=binance_pair)
             ticker_coinbase = client_coinbase.get_exchange_rates(currency=coinbase_pair)
+            logger.info(f'Fetched for binance ticker: {ticker_binance}, coinbase ticker: {ticker_coinbase}')
 
             rate = {
                 'symbol': binance_pair,
