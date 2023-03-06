@@ -46,6 +46,7 @@ def get_crypto_rates():
             }
 
             crypto_rates.append(rate)
+            logger.info(f'crypto rates: {crypto_rates}')
 
         return crypto_rates
     except Exception as e:
