@@ -12,7 +12,6 @@ COINBASE_API_SECRET = os.environ.get('COINBASE_API_SECRET')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-
 def get_crypto_rates():
     try:
         # Initialize the Binance client using the API key and secret stored in environment variables
@@ -21,28 +20,23 @@ def get_crypto_rates():
         # Initialize the Coinbase client using the API key and secret stored in environment variables
         client_coinbase = CoinbaseClient(api_key=COINBASE_API_KEY, api_secret=COINBASE_API_SECRET)
 
-        binance_symbols = {'BTCUSDT', 'ETHUSDT', 'DOGEUSDT', 'XRPUSDT'}
-        coinbase_symbols = {'BTC-USD', 'ETH-USD', 'DOGE-USD', 'XRP-USD'}
+        # Define the symbol mappings for each exchange
+        binance_symbol_map = {'BTCUSDT': 'BTCUSD', 'ETHUSDT': 'ETHUSD', 'DOGEUSDT': 'DOGEUSD', 'XRPUSDT': 'XRPUSD'}
+        coinbase_symbol_map = {'BTCUSDT': 'BTC-USD', 'ETHUSDT': 'ETH-USD', 'DOGEUSDT': 'DOGE-USD', 'XRPUSDT': 'XRP-USD'}
+
         crypto_rates = []
 
-        for symbol in binance_symbols:
-            ticker_binance = client_binance.get_symbol_ticker(symbol=symbol)
+        for pair in binance_symbol_map.keys():
+            binance_symbol = binance_symbol_map[pair]
+            coinbase_symbol = coinbase_symbol_map[pair]
 
-            if 'BTC' in symbol:
-                symbol_coinbase = 'BTC-USD'
-            elif 'ETH' in symbol:
-                symbol_coinbase = 'ETH-USD'
-            elif 'DOGE' in symbol:
-                symbol_coinbase = 'DOGE-USD'
-            elif 'XRP' in symbol:
-                symbol_coinbase = 'XRP-USD'
-
-            ticker_coinbase = client_coinbase.get_exchange_rates(currency=symbol_coinbase)
+            ticker_binance = client_binance.get_symbol_ticker(symbol=pair)
+            ticker_coinbase = client_coinbase.get_spot_price(currency_pair=coinbase_symbol)
 
             rate = {
-                'symbol': symbol,
+                'symbol': pair,
                 'binance': float(ticker_binance['price']),
-                'coinbase': float(ticker_coinbase['rates']['USD']),
+                'coinbase': float(ticker_coinbase.amount),
             }
 
             crypto_rates.append(rate)
