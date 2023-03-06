@@ -22,28 +22,25 @@ def get_crypto_rates():
         client_coinbase = CoinbaseClient(api_key=COINBASE_API_KEY, api_secret=COINBASE_API_SECRET)
 
         crypto_pairs_binance = {'BTCUSDT': 'BTCUSD', 'ETHUSDT': 'ETHUSD', 'DOGEUSDT': 'DOGEUSD', 'XRPUSDT': 'XRPUSD'}
-        crypto_pairs_coinbase = {'BTCUSD': 'BTC-USD', 'ETHUSD': 'ETH-USD', 'DOGEUSD': 'DOGE-USD', 'XRPUSD': 'XRP-USD'}
+        crypto_pairs_coinbase = {'BTCUSDT': 'BTC-USD', 'ETHUSDT': 'ETH-USD', 'DOGEUSDT': 'DOGE-USD', 'XRPUSDT': 'XRP-USD'}
         crypto_rates = []
 
         for binance_pair, coinbase_pair in zip(crypto_pairs_binance.keys(), crypto_pairs_coinbase.keys()):
-            logger.info(f'Fetching rate for binance pair: {binance_pair}, coinbase pair: {coinbase_pair}')
-            ticker_binance = client_binance.get_symbol_ticker(symbol=binance_pair)
-            ticker_coinbase = client_coinbase.get_exchange_rates(currency=coinbase_pair)
-            logger.info(f'Fetched for binance ticker: {ticker_binance}, coinbase ticker: {ticker_coinbase}')
+            try:
+                logger.info(f'Getting rates for {binance_pair} and {coinbase_pair}')
+                ticker_binance = client_binance.get_symbol_ticker(symbol=binance_pair)
+                ticker_coinbase = client_coinbase.get_exchange_rates(currency=coinbase_pair)
 
-            rate = {
-                'symbol': binance_pair,
-                'binance': {
-                    'buy': client_binance.get_ticker(symbol=binance_pair)['bidPrice'],
-                    'sell': client_binance.get_ticker(symbol=binance_pair)['askPrice']
-                },
-                'coinbase': {
-                    'buy': ticker_coinbase['buy'],
-                    'sell': ticker_coinbase['sell']
+                rate = {
+                    'symbol': binance_pair,
+                    'binance': {'buy': float(ticker_binance['bidPrice']), 'sell': float(ticker_binance['askPrice'])},
+                    'coinbase': {'buy': float(ticker_coinbase['rates']['USD']), 'sell': float(ticker_coinbase['rates']['USD'])},
                 }
-            }
 
-            crypto_rates.append(rate)
+                crypto_rates.append(rate)
+            except Exception as e:
+                logger.error(f'Error getting rates for {binance_pair} and {coinbase_pair}: {e}')
+
         logger.info(f'crypto rates: {crypto_rates}')
         return crypto_rates
     except Exception as e:
