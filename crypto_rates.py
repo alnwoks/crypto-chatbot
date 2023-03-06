@@ -25,7 +25,7 @@ def get_crypto_rates():
         crypto_pairs_coinbase = {'BTCUSDT': 'BTC-USD', 'ETHUSDT': 'ETH-USD', 'DOGEUSDT': 'DOGE-USD', 'XRPUSDT': 'XRP-USD'}
         crypto_rates = []
 
-        for binance_pair, coinbase_pair in zip(crypto_pairs_binance.keys(), crypto_pairs_coinbase.keys()):
+        for binance_pair, coinbase_pair in zip(crypto_pairs_binance.values(), crypto_pairs_coinbase.values()):
             try:
                 logger.info(f'Getting rates for {binance_pair} and {coinbase_pair}')
                 ticker_binance = client_binance.get_symbol_ticker(symbol=binance_pair)
