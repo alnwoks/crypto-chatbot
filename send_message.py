@@ -44,7 +44,7 @@ def send_whatsapp_message(to_number, message):
 
 def send_telegram_message(chat_id, message):
     bot = Bot(TELEGRAM_BOT_TOKEN)
-    bot.send_message(chat_id=chat_id, text=message)
+    bot.send_message(chat_id=chat_id, text=message) # parse_mode=ParseMode.MARKDOWN_V2
 
 def send_messages(message):
     for user in WHATSAPP_USERS:
