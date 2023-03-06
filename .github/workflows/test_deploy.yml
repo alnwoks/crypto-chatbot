@@ -64,8 +64,8 @@ jobs:
           serverless plugin install -n serverless-dotenv-plugin
       - name: Test ${{ matrix.lambda }} handler
         run: serverless invoke local --function ${{ matrix.lambda }}
-      # - name: Test crypto rates handler
-      #   run: python get_crypto_rates.py BTC Binance
+      - name: debug code
+        run: chromedriver --version
 
 
   build:
