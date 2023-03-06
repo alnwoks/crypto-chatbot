@@ -62,10 +62,10 @@ def send_whatsapp_message(to_number, message):
         logger.error(f'Error sending WhatsApp message: {e}')
 
 
-def send_telegram_message(chat_id, message):
+async def send_telegram_message(chat_id, message):
     try:
         bot = Bot(TELEGRAM_BOT_TOKEN)
-        bot.send_message(chat_id=chat_id, text=message) # parse_mode=ParseMode.MARKDOWN_V2
+        await bot.send_message(chat_id=chat_id, text=message) # parse_mode=ParseMode.MARKDOWN_V2
     except Exception as e:
         logger.error(f'Error sending Telegram message: {e}')
     
