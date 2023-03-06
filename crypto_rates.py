@@ -12,6 +12,7 @@ COINBASE_API_SECRET = os.environ.get('COINBASE_API_SECRET')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+
 def get_crypto_rates():
     try:
         # Initialize the Binance client using the API key and secret stored in environment variables
@@ -20,28 +21,22 @@ def get_crypto_rates():
         # Initialize the Coinbase client using the API key and secret stored in environment variables
         client_coinbase = CoinbaseClient(api_key=COINBASE_API_KEY, api_secret=COINBASE_API_SECRET)
 
-        # Define the symbol mappings for each exchange
-        binance_symbol_map = {'BTCUSDT': 'BTCUSD', 'ETHUSDT': 'ETHUSD', 'DOGEUSDT': 'DOGEUSD', 'XRPUSDT': 'XRPUSD'}
-        coinbase_symbol_map = {'BTCUSDT': 'BTC-USD', 'ETHUSDT': 'ETH-USD', 'DOGEUSDT': 'DOGE-USD', 'XRPUSDT': 'XRP-USD'}
-
+        crypto_pairs_binance = {'BTCUSDT': 'BTCUSD', 'ETHUSDT': 'ETHUSD', 'DOGEUSDT': 'DOGEUSD', 'XRPUSDT': 'XRPUSD'}
+        crypto_pairs_coinbase = {'BTCUSDT': 'BTC-USD', 'ETHUSDT': 'ETH-USD', 'DOGEUSDT': 'DOGE-USD', 'XRPUSDT': 'XRP-USD'}
         crypto_rates = []
 
-        for pair in binance_symbol_map.keys():
-            binance_symbol = binance_symbol_map[pair]
-            coinbase_symbol = coinbase_symbol_map[pair]
-
-            ticker_binance = client_binance.get_symbol_ticker(symbol=pair)
-            ticker_coinbase = client_coinbase.get_spot_price(currency_pair=coinbase_symbol)
+        for binance_pair, coinbase_pair in zip(crypto_pairs_binance.keys(), crypto_pairs_coinbase.keys()):
+            ticker_binance = client_binance.get_symbol_ticker(symbol=binance_pair)
+            ticker_coinbase = client_coinbase.get_exchange_rates(currency=coinbase_pair)
 
             rate = {
-                'symbol': pair,
+                'symbol': binance_pair,
                 'binance': float(ticker_binance['price']),
-                'coinbase': float(ticker_coinbase.amount),
+                'coinbase': float(ticker_coinbase['rates']['USD']),
             }
 
             crypto_rates.append(rate)
-            logger.info(f'crypto rates: {crypto_rates}')
-
+        logger.info(f'crypto rates: {crypto_rates}')
         return crypto_rates
     except Exception as e:
         logger.error(f'Error getting crypto rates: {e}')

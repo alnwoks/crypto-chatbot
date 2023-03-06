@@ -35,7 +35,7 @@ def send_whatsapp_message(to_number, message):
         if not SKIP_QR_CODE:
             input('Press enter after scanning QR code')
 
-        search_box = driver.find_element("xpath",'//div[@class="_2_1wd copyable-text selectable-text"][@contenteditable="true"][@data-tab="3"]')
+        search_box = driver.find_element("xpath",'//div[@class="Er7QU copyable-text selectable-text"][@contenteditable="true"][@data-tab="3"]')
         search_box.click()
         search_box.send_keys(to_number)
         time.sleep(5)
@@ -46,7 +46,7 @@ def send_whatsapp_message(to_number, message):
         time.sleep(5)
 
         # Find the message input box and send the message
-        message_box = driver.find_element("xpath", '//div[@class="_2_1wd copyable-text selectable-text"][@contenteditable="true"][@data-tab="1"]')
+        message_box = driver.find_element("xpath", '//div[@class="fd365im1 to2l77zo bbv8nyr4 gfz4du6o ag5g9lrv bze30y65 kao4egtt"][@contenteditable="true"][@data-tab="10"]')
         message_box.click()
         message_box.send_keys(message)
         time.sleep(5)
