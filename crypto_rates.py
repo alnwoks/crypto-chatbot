@@ -29,10 +29,22 @@ def get_crypto_rates():
             ticker_binance = client_binance.get_symbol_ticker(symbol=binance_pair)
             ticker_coinbase = client_coinbase.get_exchange_rates(currency=coinbase_pair)
 
+            buy_rate_binance = client_binance.get_orderbook_ticker(symbol=binance_pair)['askPrice']
+            sell_rate_binance = client_binance.get_orderbook_ticker(symbol=binance_pair)['bidPrice']
+
+            buy_rate_coinbase = client_coinbase.get_buy_price(currency_pair=coinbase_pair)['amount']
+            sell_rate_coinbase = client_coinbase.get_sell_price(currency_pair=coinbase_pair)['amount']
+
             rate = {
                 'symbol': binance_pair,
-                'binance': float(ticker_binance['price']),
-                'coinbase': float(ticker_coinbase['rates']['USD']),
+                'binance': {
+                    'buy': float(buy_rate_binance),
+                    'sell': float(sell_rate_binance),
+                },
+                'coinbase': {
+                    'buy': float(buy_rate_coinbase),
+                    'sell': float(sell_rate_coinbase),
+                },
             }
 
             crypto_rates.append(rate)
