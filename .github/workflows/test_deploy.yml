@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_ROLE_ARN: arn:aws:iam::443420183404:role/github
-  AWS_DEFAULT_REGION: us-east-1
+  AWS_DEFAULT_REGION: us-east-2
   PLAN_NAME: main
   SLS_VERSION: '3.28.0'
   NODE_VERSION: '19.2.0'
