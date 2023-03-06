@@ -1,6 +1,6 @@
-python-binance
-coinbase
-python-telegram-bot
-selenium
-certifi
-chromedriver-binary
+python-binance>=1.0.12
+coinbase>=2.0.0
+python-telegram-bot>=13.0
+selenium>=4.1.0
+certifi>=2021.10.8
+chromedriver-binary>=96.0.4664.45.*
